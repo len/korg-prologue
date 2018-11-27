@@ -15,7 +15,7 @@ enum {
   k_flag_reset    = 1<<0
 };
 
-#define DELAY_BUFFER_SIZE 2048
+#define DELAY_BUFFER_SIZE 4096 // 2048 is too small to fit the lowest octave, and it must be a power of 2 due to DelayLine implementation
 static float delay_buffer[DELAY_BUFFER_SIZE];
 
 typedef struct State {
