@@ -1,0 +1,20 @@
+{
+    "header" : 
+    {
+        "platform" : "prologue",
+        "module" : "osc",
+        "api" : "1.0-0",
+        "dev_id" : 0,
+        "prg_id" : 0,
+        "version" : "1.0-0",
+        "name" : "organ",
+        "num_param" : 5,
+        "params" : [
+            ["16'",      0,  8,  ""],
+            ["8'",      0,  8,  ""],
+            ["4'",    0,  8,  ""],
+            ["II",     0, 8, ""],
+            ["III",    0, 8, ""]
+          ]
+    }
+}
