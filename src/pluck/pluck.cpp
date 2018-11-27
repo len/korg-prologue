@@ -56,7 +56,7 @@ void OSC_CYCLE(const user_osc_param_t * const params,
   }
   
   const float attenuation = s.attenuation;
-  const float length = clipminmaxf(2.f, 2.f / osc_w0f_for_note((params->pitch)>>8, params->pitch & 0xFF), DELAY_BUFFER_SIZE);
+  const float length = clipminmaxf(2.f, 1.f / osc_w0f_for_note((params->pitch)>>8, params->pitch & 0xFF), DELAY_BUFFER_SIZE);
 
   uint32_t burst = s.burst;
 
