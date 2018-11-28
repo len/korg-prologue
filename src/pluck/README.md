@@ -8,4 +8,4 @@ There are also experimental (maybe not very useful) attenuation and drive parame
 
 Experiment with it. Sounds great layered over the analog oscillators.
 
-There's a prebuilt binary in ../../builds/
+There's a prebuilt binary [here](https://raw.githubusercontent.com/len/korg-prologue/master/builds/pluck.prlgunit)
