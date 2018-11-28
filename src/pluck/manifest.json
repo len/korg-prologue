@@ -8,6 +8,11 @@
         "prg_id" : 0,
         "version" : "1.0-0",
         "name" : "pluck",
-        "num_param" : 0
+        "num_param" : 2,
+        "params" : [
+            ["Attenuation", 0, 100, "%"],
+            ["Drive",       0, 100, "%"]
+          ]
+
     }
 }

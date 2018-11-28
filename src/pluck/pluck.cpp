@@ -9,6 +9,7 @@
 
 #include "userosc.h"
 #include "delayline.hpp"
+#include "biquad.hpp"
 
 enum {
   k_flags_none    = 0,
@@ -20,7 +21,8 @@ static float delay_buffer[DELAY_BUFFER_SIZE];
 
 typedef struct State {
   dsp::DelayLine delay;
-  float damping, attack, attenuation, inharmonicity;
+  dsp::BiQuad impulse_filter;
+  float attack, damping, attenuation, inharmonicity, drive;
   uint32_t burst;
   float lfo, lfoz;
   uint32_t flags:8;
@@ -31,11 +33,12 @@ static State s;
 void OSC_INIT(uint32_t platform, uint32_t api)
 {
   s.delay.setMemory(delay_buffer, DELAY_BUFFER_SIZE);
-
-  s.damping = .5f;
+  s.impulse_filter.mCoeffs.setPoleLP(0.9f);
   s.attack = 10; // 10 milliseconds
+  s.damping = .5f;
   s.attenuation = 0;
   s.inharmonicity = 0;
+  s.drive = 1.f;
 }
 
 void OSC_CYCLE(const user_osc_param_t * const params,
@@ -55,8 +58,13 @@ void OSC_CYCLE(const user_osc_param_t * const params,
     s.lfo = q31_to_f32(params->shape_lfo);
   }
   
+  dsp::BiQuad &impulse_filter = s.impulse_filter;
+  dsp::DelayLine &delay = s.delay;
+
   const float attenuation = s.attenuation;
   const float length = clipminmaxf(2.f, 1.f / osc_w0f_for_note((params->pitch)>>8, params->pitch & 0xFF), DELAY_BUFFER_SIZE);
+
+  const float drive = s.drive;
 
   uint32_t burst = s.burst;
 
@@ -66,8 +74,9 @@ void OSC_CYCLE(const user_osc_param_t * const params,
   q31_t * __restrict y = (q31_t *)yn;
   const q31_t * y_e = y + frames;
   float lastSig = 0;
+  float impulse = 0;
   for (; y != y_e; ) {
-    float sig = s.delay.readFrac(length);
+    float sig = delay.readFrac(length);
 
     // low-pass filter for damping
     const float damping = clipminmaxf(.000001f, s.damping + lfoz, .999999f);
@@ -75,14 +84,14 @@ void OSC_CYCLE(const user_osc_param_t * const params,
 
     if (burst>0) {
       burst--;
-      //sig = clip1m1f(sig + osc_white());
-      sig = osc_softclipf(0.05f, sig + osc_white());
+      sig += impulse_filter.process_fo(osc_white());
     }
 
-    // all-pass filter for inharmonicity
-    // ... TODO
+    // TODO: all-pass filter for inharmonicity
 
-    s.delay.write(sig);
+    delay.write(osc_softclipf(0.05f, sig));
+
+    sig = osc_softclipf(0.05f, sig * drive);
 
     *(y++) = f32_to_q31(sig);
 
@@ -109,7 +118,14 @@ void OSC_PARAM(uint16_t index, uint16_t value)
 { 
   switch (index) {
   case k_osc_param_id1:
+    {
+      const float x = value*.01f*.6f + .1f;
+      s.attenuation = x*x*x; // 0.01 to 0.343 with more resolution in the lower values
+    }
+    break;
   case k_osc_param_id2:
+    s.drive = 1.f + value*.01f; // 1 to 2
+    break;
   case k_osc_param_id3:
   case k_osc_param_id4:
   case k_osc_param_id5:
@@ -117,16 +133,13 @@ void OSC_PARAM(uint16_t index, uint16_t value)
     break;
     
   case k_osc_param_shape:
-    s.damping = 1.f - clipminmaxf(.0000001f, param_val_to_f32(value), .999999f);
+    s.damping = 1.f - clipminmaxf(.0000001f, param_val_to_f32(value), .999999f); // 1 to 0
     break;
     
   case k_osc_param_shiftshape:
-    {
-      const float x = param_val_to_f32(value)*.6f + .1f;
-      s.attenuation = x*x*x; // values between 0.01 and 0.343 with more resolution in the lower values
-    }
+    s.impulse_filter.mCoeffs.setPoleLP(clipminmaxf(.0000001f, param_val_to_f32(value), .999999f));
     break;
-    
+ 
   default:
     break;
   }
