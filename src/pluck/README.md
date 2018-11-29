@@ -9,3 +9,6 @@ There are also experimental (maybe not very useful) attenuation and drive parame
 Experiment with it. Sounds great layered over the analog oscillators.
 
 There's a prebuilt binary [here](https://raw.githubusercontent.com/len/korg-prologue/master/builds/pluck.prlgunit)
+
+Listen to some [sound samples](https://soundcloud.com/luciano-notarfrancesco/sets/karplus-strong-plucked-string-custom-oscillator-for-korg-prologue)
+
