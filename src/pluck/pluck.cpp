@@ -137,7 +137,10 @@ void OSC_PARAM(uint16_t index, uint16_t value)
     break;
     
   case k_osc_param_shiftshape:
-    s.impulse_filter.mCoeffs.setPoleLP(clipminmaxf(.0000001f, param_val_to_f32(value), .999999f));
+    {
+      const float x = 1.f - param_val_to_f32(value);
+      s.impulse_filter.mCoeffs.setPoleLP(clipminmaxf(.0000001f, 1.f - x*x*x, .999999f)); // more resolution near 1
+    }
     break;
  
   default:
