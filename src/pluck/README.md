@@ -2,7 +2,7 @@ This is a user oscillator for KORG Prologue implementing the Karplus-Strong pluc
 
 The shape knob controls the damping factor for the low-pass filter applied in the feedback of the delay line. This is similar to string tension: shape to minimum produces relatively loose strings and long sustain, while shape to a maximum produces very short plucks with no sustain.
 
-Shift-shape controls the pole of a low-pass filter applied to the white noise signal that excites the delay line feedback loop doring the attack. This is small values produce sharp plucking sounds, and larger values sound like the string is plucked or hammered with some soft material.
+Shift-shape controls the pole of a low-pass filter applied to the white noise signal that excites the delay line feedback loop during the attack. Small values produce sharp plucking sounds, and larger values sound like the string is plucked with some soft material.
 
 There are also experimental (maybe not very useful) attenuation and drive parameters accessible through the edit -> 7 menu.
 
