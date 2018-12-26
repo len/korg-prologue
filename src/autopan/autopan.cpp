@@ -23,8 +23,8 @@ static const float s_fs_recip = 1.f / 48000.f;
 void MODFX_INIT(uint32_t platform, uint32_t api)
 {
   s_lfo.reset();
-  tremolo_depth = 0.f;
   tremolo_frequency = 5.5f;
+  tremolo_depth = 0.f;
 //  s_lfo.setF0(tremolo_frequency,s_fs_recip);
 }
 
@@ -54,7 +54,6 @@ void MODFX_PROCESS(const float *main_xn, float *main_yn,
     *(sy++) = *(sx++)*right_lfo;
   }
 }
-
 
 void MODFX_PARAM(uint8_t index, int32_t value)
 {

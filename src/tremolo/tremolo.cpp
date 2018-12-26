@@ -54,7 +54,6 @@ void MODFX_PROCESS(const float *main_xn, float *main_yn,
   }
 }
 
-
 void MODFX_PARAM(uint8_t index, int32_t value)
 {
   const float valf = q31_to_f32(value);
