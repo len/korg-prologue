@@ -31,7 +31,7 @@ void MODFX_PROCESS(const float *main_xn, float *main_yn,
     m_left_mix_to_right = 0;
     m_right_mix_to_right = 1.f + main_balance; // 0 to 1
   } else {
-    m_left_mix_to_left = 1.f - main_balance; // 1 to 0
+    m_left_mix_to_left = .5f - main_balance / 2.f; // 0.5 to 0
     m_right_mix_to_left = 0;
     m_left_mix_to_right = main_balance / 2.f; // 0 to 0.5
     m_right_mix_to_right = 1.f - m_left_mix_to_right; // 1 to 0.5
@@ -44,7 +44,7 @@ void MODFX_PROCESS(const float *main_xn, float *main_yn,
     s_left_mix_to_right = 0;
     s_right_mix_to_right = 1.f + sub_balance; // 0 to 1
   } else {
-    s_left_mix_to_left = 1.f - sub_balance; // 1 to 0
+    s_left_mix_to_left = .5f - sub_balance / 2.f; // 0.5 to 0
     s_right_mix_to_left = 0;
     s_left_mix_to_right = sub_balance / 2.f; // 0 to 0.5
     s_right_mix_to_right = 1.f - s_left_mix_to_right; // 1 to 0.5
